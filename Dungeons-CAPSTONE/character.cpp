@@ -12,6 +12,7 @@
 // Move (up, down, left, right), inspect rooms, attack, pick up items, inventory,
 // use items, view stats, view map (maybe get to this)
 
+//Character class constructor
 Character::Character() {
     name = "Default Name";
     health = 10;
@@ -28,6 +29,7 @@ Character::Character() {
 
 void Character::moveChar(const std::string& direction) {};
 
+
 void Character::inspectRoom() {};
 
 void Character::attack() {};
@@ -40,8 +42,5 @@ void Character::viewStats() {};
 
 void Character::viewMap() {};
 
-void Character::setCurrentRoom(Room* room) {
-    currentRoom = room;
-};
-
+void Character::setCurrentRoom(Room* room) { currentRoom = room; };
 Room* Character::getCurrentRoom() const { return currentRoom; };

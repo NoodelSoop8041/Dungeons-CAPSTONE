@@ -1,48 +1,48 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Core">
+      <UniqueIdentifier>{c29ee76b-36f6-4f98-8b22-a886c3cf6a26}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{09fda9ae-c8fa-4914-b7dc-f7afa1d6ab58}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Character">
+      <UniqueIdentifier>{270a85a1-1039-41de-a42b-a7ba877c5f8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Map">
+      <UniqueIdentifier>{a38570a8-2d12-41ef-95c2-d503d8bec79c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="character.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="map.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Map</Filter>
     </ClCompile>
     <ClCompile Include="room.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="character.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="game.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="character.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="game.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="room.hpp">
+      <Filter>Map</Filter>
     </ClInclude>
     <ClInclude Include="map.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Map</Filter>
     </ClInclude>
-    <ClInclude Include="room.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="character.hpp">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="game.hpp">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

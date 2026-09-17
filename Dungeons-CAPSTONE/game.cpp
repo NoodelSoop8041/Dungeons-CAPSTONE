@@ -8,17 +8,15 @@ Game::Game() {
 
 void Game::run() {
 
+    const float tileSize = 64.f;
+
     sf::RenderWindow window(
         sf::VideoMode({ 1920, 1080 }),
         "Dungeon Crawler"
     );
 
-    sf::RectangleShape player({ 20.f, 20.f });
-    player.setPosition({ 380.f, 280.f });
-
-    sf::RectangleShape monster({ 20.f, 20.f });
-    monster.setPosition({ 200.f, 200.f });
-    monster.setFillColor(sf::Color::Red);
+    sf::RectangleShape playerSprite({ 40.f, 40.f });
+    playerSprite.setPosition({ 80.f, 80.f });
 
     while (window.isOpen())
     {
@@ -30,22 +28,50 @@ void Game::run() {
 
         // Movement
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
-            player.move({ 0.f, -1.f });
+            playerSprite.move({ 0.f, -2.f });
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
-            player.move({ 0.f, 1.f });
+            playerSprite.move({ 0.f, 2.f });
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
-            player.move({ -1.f, 0.f });
+            playerSprite.move({ -2.f, 0.f });
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-            player.move({ 1.f, 0.f });
+            playerSprite.move({ 2.f, 0.f });
 
         // Draw
         window.clear();
 
-        window.draw(player);
-        window.draw(monster);
+        Room* currentRoom = player.getCurrentRoom();
+
+        const auto& layout = currentRoom->getLayout();
+
+        for (std::size_t y = 0; y < layout.size(); y++) {
+            for (std::size_t x = 0; x < layout[y].size(); x++) {
+                
+                sf::RectangleShape tile({ tileSize - 2.f, tileSize - 2.f });
+
+                tile.setPosition({
+                    x * tileSize,
+                    y * tileSize
+                    });
+                
+                if (layout[y][x] == TileType::Wall) {
+                    tile.setFillColor(sf::Color(80, 80, 80));
+                }
+                else if (layout[y][x] == TileType::Floor) {
+                    tile.setFillColor(sf::Color(150, 150, 150));
+                }
+                else if (layout[y][x] == TileType::Door) {
+                    tile.setFillColor(sf::Color(150, 100, 50));
+                }
+
+                window.draw(tile);
+
+            }
+        }
+
+        window.draw(playerSprite);
 
         window.display();
     }

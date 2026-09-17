@@ -1,5 +1,13 @@
 #pragma once
 #include <string>
+#include <vector>
+
+enum class TileType {
+	Wall,
+	Floor,
+	Door,
+	
+};
 
 class Room {
 
@@ -11,6 +19,8 @@ private:
 	Room* south;
 	Room* east;
 	Room* west;
+
+	std::vector<std::vector<TileType>> layout;	
 
 public:
 	Room(const std::string& name, const std::string& description);
@@ -26,6 +36,8 @@ public:
 	Room* getWest() const;
 
 	std::string getName() const;
+
+	const std::vector<std::vector<TileType>>& getLayout() const;
 
 	void inspect() const;
 
