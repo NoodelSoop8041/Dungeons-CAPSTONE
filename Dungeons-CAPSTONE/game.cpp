@@ -27,22 +27,33 @@ void Game::run() {
         }
 
         // Movement
+        sf::Vector2f movement(0.f, 0.f);
+
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
-            playerSprite.move({ 0.f, -2.f });
+            movement.y -= 2.f;
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
-            playerSprite.move({ 0.f, 2.f });
+            movement.y += 2.f;
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
-            playerSprite.move({ -2.f, 0.f });
+            movement.x -= 2.f;
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-            playerSprite.move({ 2.f, 0.f });
+            movement.x += 2.f;
+
+        //Collision check before moving
+        sf::FloatRect newBounds = playerSprite.getGlobalBounds();
+
+        newBounds.position += movement;
+
+        Room* currentRoom = player.getCurrentRoom();
+        
+        if (canMove(newBounds, currentRoom)) {
+            playerSprite.move(movement);
+        }
 
         // Draw
         window.clear();
-
-        Room* currentRoom = player.getCurrentRoom();
 
         const auto& layout = currentRoom->getLayout();
 
@@ -77,3 +88,38 @@ void Game::run() {
     }
 };
 
+bool Game::canMove(const sf::FloatRect& playerBounds, Room* room) {
+        const auto& layout = room->getLayout();
+        const float tileSize = 64.f;
+
+        //Find tiles occupied by player
+        int leftTile = 
+            static_cast<int>(playerBounds.position.x / tileSize);
+
+        int rightTile = 
+            static_cast<int>((playerBounds.position.x + playerBounds.size.x) / tileSize);
+
+        int topTile =
+            static_cast<int>(playerBounds.position.y / tileSize);
+
+        int bottomTile =
+            static_cast<int>((playerBounds.position.y + playerBounds.size.y) / tileSize);
+
+        //Is player outside of map?
+        if (leftTile < 0 || rightTile >= static_cast<int>(layout[0].size()) ||
+            topTile < 0 || bottomTile >= static_cast<int>(layout.size())) {
+
+            return false;
+        }
+
+        //Check if tile is a wall
+        for (int y = topTile; y <= bottomTile; y++) {
+            for (int x = leftTile; x <= rightTile; x++) {
+                if (layout[y][x] == TileType::Wall) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+}

@@ -1,6 +1,8 @@
 #pragma once
+
 #include "character.hpp"
 #include "map.hpp"
+#include <SFML/Graphics.hpp>
 #include  <iostream>
 
 
@@ -17,6 +19,9 @@ public:
     void run();
 
 private:
+    
+    bool canMove(const sf::FloatRect& playerBounds, Room* room);
+
 	void processEvents();
     void update(float deltaTime);
     void render();
