@@ -14,6 +14,12 @@ Room::Room(const std::string& name, const std::string& description)
 			}
 		}
 	}
+
+	//Create a door in the middle of walls
+	layout[0][4] = TileType::Door; // North wall
+	layout[7][4] = TileType::Door; // South wall
+	layout[3][0] = TileType::Door; // West wall
+	layout[3][9] = TileType::Door; // East wall
 }
 
 void Room::setNorth(Room* room) { north = room; }

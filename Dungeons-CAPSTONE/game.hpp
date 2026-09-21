@@ -12,15 +12,28 @@ private:
     Character player;
     Map map;
 
+    sf::RenderWindow window;
+	sf::RectangleShape playerSprite;
+
+	const float tileSize = 64.f;
+    const float playerSpeed = 2.f;
+
 public:
 
     Game();
-
     void run();
 
 private:
     
     bool canMove(const sf::FloatRect& playerBounds, Room* room);
+    bool checkDoor(const sf::FloatRect& playerBounds, Room* room);
+
+    Room* getNextRoom(const sf::FloatRect& playerBounds, Room* room);
+
+	std::string getDoorDirection(const sf::FloatRect& playerBounds, Room* room);
+    void changeRoom(Room* nextRoom, const std::string& direction);
+
+
 
 	void processEvents();
     void update(float deltaTime);
