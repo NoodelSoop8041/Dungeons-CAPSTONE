@@ -1,5 +1,5 @@
 #pragma once
-
+#include "enemies.hpp"
 #include "character.hpp"
 #include "map.hpp"
 #include <SFML/Graphics.hpp>
