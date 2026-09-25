@@ -1,13 +1,9 @@
 #include "enemies.hpp"
 
-Enemy::Enemy() {
-	name = "basic enemy";
-	health = 10;
-	maxHealth = 10;
-	strength = 1;
-	defense = 1;
+Enemy::Enemy() : name("basic enemy"), health(10), maxHealth(10), strength(1), defense(1) {}
 
-}
+Enemy::Enemy(const std::string name, int health, int strength, int defense) :
+	name(name), health(health), maxHealth(health), strength(strength), defense(defense) {}
 
 std::string Enemy::getName() const {
 	return name;
@@ -59,4 +55,8 @@ int Enemy::getDefense() const {
 
 void Enemy::increaseDefense(int amount) {
 	defense += amount;
+}
+
+bool Enemy::isAlive() const {
+	return health > 0;
 }

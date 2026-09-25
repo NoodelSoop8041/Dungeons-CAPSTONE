@@ -1,4 +1,5 @@
 #include "map.hpp"
+#include <iostream>
 
 
 
@@ -20,6 +21,10 @@ void Map::createMap() {
     Room* library = &rooms[2];
     Room* storage = &rooms[3];
     Room* bossRoom = &rooms[4];
+
+    //Protype enemy addition
+    Enemy goblin("Goblin", 15, 3, 1);
+    armory->addEnemy(goblin);
 
     entrance->setNorth(armory);
     entrance->setWest(library);

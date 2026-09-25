@@ -4,7 +4,10 @@
 class Enemy {
 
 public:
+
 	Enemy();
+
+	Enemy(const std::string name, int health, int strength, int defense);
 
 	std::string getName() const;
 	void setName(const std::string& name);
@@ -20,7 +23,10 @@ public:
 	void decreaseDefense(int amount);
 	void increaseDefense(int amount);
 
+	bool isAlive() const;
+
 private:
+
 	std::string name;
 
 	int health;

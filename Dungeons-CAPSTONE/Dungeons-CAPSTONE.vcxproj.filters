@@ -30,6 +30,9 @@
     <ClCompile Include="main.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="enemies.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="room.hpp">
@@ -43,6 +46,9 @@
     </ClInclude>
     <ClInclude Include="game.hpp">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="enemies.hpp">
+      <Filter>Character</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
