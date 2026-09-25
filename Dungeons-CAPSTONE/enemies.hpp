@@ -1,5 +1,4 @@
-#pragma once
-#include <string>
+#include "includes.hpp"
 
 class Enemy {
 
@@ -25,6 +24,9 @@ public:
 
 	bool isAlive() const;
 
+	sf::Vector2f getPosition() const;
+	void setPosition(const sf::Vector2f& position);
+
 private:
 
 	std::string name;
@@ -33,5 +35,7 @@ private:
 	int maxHealth;
 	int strength;
 	int defense;
+
+	sf::Vector2f position;
 
 };

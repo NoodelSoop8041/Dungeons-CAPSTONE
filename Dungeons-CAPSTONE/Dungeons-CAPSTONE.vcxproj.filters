@@ -50,5 +50,8 @@
     <ClInclude Include="enemies.hpp">
       <Filter>Character</Filter>
     </ClInclude>
+    <ClInclude Include="includes.hpp">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

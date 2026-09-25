@@ -1,5 +1,4 @@
-#include "character.hpp"
-#include <iostream>
+#include "includes.hpp"
 
 // Functions of the dungeons:
 // 1. Character creation (includes weapons and stats)

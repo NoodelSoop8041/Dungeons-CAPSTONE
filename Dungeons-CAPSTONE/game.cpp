@@ -1,5 +1,4 @@
-#include "game.hpp"
-#include <algorithm>
+#include "includes.hpp"
 
 
 Game::Game() {
@@ -13,6 +12,7 @@ Game::Game() {
 	playerSprite.setSize({ 40.f, 40.f });
 
     playerSprite.setPosition({ 2.f * tileSize, 2.f * tileSize });
+
 };
 
 void Game::run() {
@@ -48,6 +48,21 @@ void Game::update(float deltaTime) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) { movement.x += speed; }
 
     Room* currentRoom = player.getCurrentRoom();
+
+    //Enemies
+    enemySprites.clear();
+
+    const std::vector <Enemy>& enemies = currentRoom->getEnemies();
+
+    for (const Enemy& enemy : enemies) {
+        sf::CircleShape shape(15.f);
+        shape.setFillColor(sf::Color::Red);
+        shape.setPosition(enemy.getPosition());
+
+        enemySprites.push_back(shape);
+    }
+
+    //End Enemies
 
     sf::FloatRect newBounds = playerSprite.getGlobalBounds();
     newBounds.position += movement;
@@ -99,6 +114,11 @@ void Game::render() {
     }
 
     window.draw(playerSprite);
+
+    //Enemy render
+    for (const sf::CircleShape& shape : enemySprites) {
+        window.draw(shape);
+    }
 
     window.display();
 }
@@ -250,3 +270,5 @@ std::string Game::getDoorDirection(const sf::FloatRect& playerBounds, Room* room
 
     return "";
 }
+
+

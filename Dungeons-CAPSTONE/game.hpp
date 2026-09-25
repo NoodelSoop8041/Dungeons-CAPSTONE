@@ -1,9 +1,4 @@
-#pragma once
-#include "enemies.hpp"
-#include "character.hpp"
-#include "map.hpp"
-#include <SFML/Graphics.hpp>
-#include  <iostream>
+#include "includes.hpp"
 
 
 class Game {
@@ -14,6 +9,7 @@ private:
 
     sf::RenderWindow window;
 	sf::RectangleShape playerSprite;
+    std::vector<sf::CircleShape> enemySprites;
 
 	const float tileSize = 64.f;
     const float playerSpeed = 2.f;

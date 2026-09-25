@@ -1,9 +1,16 @@
-#include "enemies.hpp"
+#include "includes.hpp"
 
-Enemy::Enemy() : name("basic enemy"), health(10), maxHealth(10), strength(1), defense(1) {}
+Enemy::Enemy() : 
+	name("basic enemy"), 
+	health(10), maxHealth(10), 
+	strength(1), defense(1), 
+	position(0.f, 0.f) {}
 
 Enemy::Enemy(const std::string name, int health, int strength, int defense) :
-	name(name), health(health), maxHealth(health), strength(strength), defense(defense) {}
+	name(name), 
+	health(health), maxHealth(health), 
+	strength(strength), defense(defense), 
+	position(0.f, 0.f) {}
 
 std::string Enemy::getName() const {
 	return name;
@@ -59,4 +66,12 @@ void Enemy::increaseDefense(int amount) {
 
 bool Enemy::isAlive() const {
 	return health > 0;
+}
+
+sf::Vector2f Enemy::getPosition() const {
+	return position;
+}
+
+void Enemy::setPosition(const sf::Vector2f& position) {
+	this->position = position;
 }

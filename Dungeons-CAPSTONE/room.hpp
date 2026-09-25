@@ -1,7 +1,4 @@
-#pragma once
-#include <string>
-#include <vector>
-#include "enemies.hpp"
+#include "includes.hpp"
 
 enum class TileType {
 	Wall,
