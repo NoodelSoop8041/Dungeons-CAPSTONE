@@ -21,7 +21,7 @@ public:
 
 private:
     
-    bool canMove(const sf::FloatRect& playerBounds, Room* room);
+    bool canMove(const sf::FloatRect& bounds, Room* room);
     bool checkDoor(const sf::FloatRect& playerBounds, Room* room);
 
     Room* getNextRoom(const sf::FloatRect& playerBounds, Room* room);

@@ -142,22 +142,22 @@ void Game::render() {
     window.display();
 }
 
-bool Game::canMove(const sf::FloatRect& playerBounds, Room* room) {
+bool Game::canMove(const sf::FloatRect& bounds, Room* room) {
         const auto& layout = room->getLayout();
         const float tileSize = 64.f;
 
-        //Find tiles occupied by player
+        //Find tiles occupied by player/enemy
         int leftTile = 
-            static_cast<int>(playerBounds.position.x / tileSize);
+            static_cast<int>(bounds.position.x / tileSize);
 
         int rightTile = 
-            static_cast<int>((playerBounds.position.x + playerBounds.size.x) / tileSize);
+            static_cast<int>((bounds.position.x + bounds.size.x) / tileSize);
 
         int topTile =
-            static_cast<int>(playerBounds.position.y / tileSize);
+            static_cast<int>(bounds.position.y / tileSize);
 
         int bottomTile =
-            static_cast<int>((playerBounds.position.y + playerBounds.size.y) / tileSize);
+            static_cast<int>((bounds.position.y + bounds.size.y) / tileSize);
 
         //Is player outside of map?
         if (leftTile < 0 || rightTile >= static_cast<int>(layout[0].size()) ||

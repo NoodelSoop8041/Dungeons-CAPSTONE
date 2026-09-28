@@ -88,3 +88,7 @@ void Enemy::moveTowards(const sf::Vector2f& target, float speed) {
 		position += direction * speed;
 	}
 }
+
+sf::FloatRect Enemy::getBounds() const {
+	return sf::FloatRect(position, sf::Vector2f(30.f, 30.f)); 
+}

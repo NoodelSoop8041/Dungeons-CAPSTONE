@@ -29,7 +29,7 @@ public:
 
 	void moveTowards(const sf::Vector2f& target, float speed);
 
-	sf::Vector2f getSize() const;
+	sf::FloatRect getBounds() const;
 
 private:
 
