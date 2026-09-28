@@ -50,3 +50,8 @@ void Room::addEnemy(const Enemy& enemy) {
 const std::vector<Enemy>& Room::getEnemies() const {
 	return enemies;
 }
+
+std::vector<Enemy>& Room::getEnemies()
+{
+	return enemies;
+}

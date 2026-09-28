@@ -49,12 +49,22 @@ void Game::update(float deltaTime) {
 
     Room* currentRoom = player.getCurrentRoom();
 
+    sf::Vector2f playerPosition = playerSprite.getPosition();
+
     //Enemies
+    const float enemySpeed = 50.0f;
+    const float enemyMovement = enemySpeed * deltaTime;
+
+    for (Enemy& enemy : currentRoom->getEnemies()) {
+        if (enemy.isAlive()) {
+            enemy.moveTowards(playerPosition, enemyMovement);
+        }
+    }
     enemySprites.clear();
 
     const std::vector <Enemy>& enemies = currentRoom->getEnemies();
 
-    for (const Enemy& enemy : enemies) {
+    for (const Enemy& enemy : currentRoom->getEnemies()) {
         sf::CircleShape shape(15.f);
         shape.setFillColor(sf::Color::Red);
         shape.setPosition(enemy.getPosition());

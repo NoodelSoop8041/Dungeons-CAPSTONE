@@ -27,6 +27,8 @@ public:
 	sf::Vector2f getPosition() const;
 	void setPosition(const sf::Vector2f& position);
 
+	void moveTowards(const sf::Vector2f& target, float speed);
+
 private:
 
 	std::string name;
