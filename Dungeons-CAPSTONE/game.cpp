@@ -52,27 +52,34 @@ void Game::update(float deltaTime) {
     sf::Vector2f playerPosition = playerSprite.getPosition();
 
     //Enemies
+    std::vector <Enemy>& enemies = currentRoom->getEnemies();
+
     const float enemySpeed = 50.0f;
     const float enemyMovement = enemySpeed * deltaTime;
 
-    for (Enemy& enemy : currentRoom->getEnemies()) {
+    for (Enemy& enemy : enemies) {
         if (enemy.isAlive()) {
+
             enemy.moveTowards(playerPosition, enemyMovement);
         }
     }
+
     enemySprites.clear();
 
-    const std::vector <Enemy>& enemies = currentRoom->getEnemies();
+    for (const Enemy& enemy : enemies)
+    {
+        if (enemy.isAlive())
+        {
+            sf::CircleShape sprite(15.f);
+            sprite.setFillColor(sf::Color::Red);
+            sprite.setPosition(enemy.getPosition());
 
-    for (const Enemy& enemy : currentRoom->getEnemies()) {
-        sf::CircleShape shape(15.f);
-        shape.setFillColor(sf::Color::Red);
-        shape.setPosition(enemy.getPosition());
-
-        enemySprites.push_back(shape);
+            enemySprites.push_back(sprite);
+        }
     }
 
     //End Enemies
+    
 
     sf::FloatRect newBounds = playerSprite.getGlobalBounds();
     newBounds.position += movement;
@@ -96,7 +103,9 @@ void Game::update(float deltaTime) {
 }
 
 void Game::render() {
+
     window.clear();
+
     Room* currentRoom = player.getCurrentRoom();
 
     const auto& layout = currentRoom->getLayout();
@@ -126,10 +135,10 @@ void Game::render() {
     window.draw(playerSprite);
 
     //Enemy render
-    for (const sf::CircleShape& shape : enemySprites) {
-        window.draw(shape);
+    for (const sf::CircleShape& sprite : enemySprites)
+    {
+        window.draw(sprite);
     }
-
     window.display();
 }
 

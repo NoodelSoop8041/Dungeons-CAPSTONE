@@ -29,6 +29,8 @@ public:
 
 	void moveTowards(const sf::Vector2f& target, float speed);
 
+	sf::Vector2f getSize() const;
+
 private:
 
 	std::string name;
@@ -39,5 +41,4 @@ private:
 	int defense;
 
 	sf::Vector2f position;
-
 };
