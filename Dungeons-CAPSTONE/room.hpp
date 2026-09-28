@@ -1,6 +1,4 @@
-#pragma once
-#include <string>
-#include <vector>
+#include "includes.hpp"
 
 enum class TileType {
 	Wall,
@@ -21,6 +19,7 @@ private:
 	Room* west;
 
 	std::vector<std::vector<TileType>> layout;	
+	std::vector<Enemy> enemies;
 
 public:
 	Room(const std::string& name, const std::string& description);
@@ -41,4 +40,8 @@ public:
 
 	void inspect() const;
 
+	//Enemies
+	void addEnemy(const Enemy& enemy);
+	const std::vector<Enemy>& getEnemies() const;
+	std::vector<Enemy>& getEnemies();
 };

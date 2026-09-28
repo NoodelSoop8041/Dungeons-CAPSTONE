@@ -1,5 +1,4 @@
-#include "game.hpp"
-#include <algorithm>
+#include "includes.hpp"
 
 
 Game::Game() {
@@ -13,6 +12,7 @@ Game::Game() {
 	playerSprite.setSize({ 40.f, 40.f });
 
     playerSprite.setPosition({ 2.f * tileSize, 2.f * tileSize });
+
 };
 
 void Game::run() {
@@ -49,6 +49,46 @@ void Game::update(float deltaTime) {
 
     Room* currentRoom = player.getCurrentRoom();
 
+    sf::Vector2f playerPosition = playerSprite.getPosition();
+
+    //Enemies
+    std::vector <Enemy>& enemies = currentRoom->getEnemies();
+
+    const float enemySpeed = 50.0f;
+    const float enemyMovement = enemySpeed * deltaTime;
+
+    for (Enemy& enemy : enemies) {
+
+        if (enemy.isAlive()) {
+
+            sf::Vector2f movement = enemy.getMoveTowards(playerPosition, enemyMovement);
+
+            sf::FloatRect newBounds = enemy.getBounds();
+            newBounds.position += movement;
+
+            if (canMove(newBounds, currentRoom)) {
+                enemy.move(movement);
+            }
+        }
+    }
+
+    enemySprites.clear();
+
+    for (const Enemy& enemy : enemies)
+    {
+        if (enemy.isAlive())
+        {
+            sf::CircleShape sprite(15.f);
+            sprite.setFillColor(sf::Color::Red);
+            sprite.setPosition(enemy.getPosition());
+
+            enemySprites.push_back(sprite);
+        }
+    }
+
+    //End Enemies
+    
+
     sf::FloatRect newBounds = playerSprite.getGlobalBounds();
     newBounds.position += movement;
 
@@ -71,7 +111,9 @@ void Game::update(float deltaTime) {
 }
 
 void Game::render() {
+
     window.clear();
+
     Room* currentRoom = player.getCurrentRoom();
 
     const auto& layout = currentRoom->getLayout();
@@ -100,25 +142,30 @@ void Game::render() {
 
     window.draw(playerSprite);
 
+    //Enemy render
+    for (const sf::CircleShape& sprite : enemySprites)
+    {
+        window.draw(sprite);
+    }
     window.display();
 }
 
-bool Game::canMove(const sf::FloatRect& playerBounds, Room* room) {
+bool Game::canMove(const sf::FloatRect& bounds, Room* room) {
         const auto& layout = room->getLayout();
         const float tileSize = 64.f;
 
-        //Find tiles occupied by player
+        //Find tiles occupied by player/enemy
         int leftTile = 
-            static_cast<int>(playerBounds.position.x / tileSize);
+            static_cast<int>(bounds.position.x / tileSize);
 
         int rightTile = 
-            static_cast<int>((playerBounds.position.x + playerBounds.size.x) / tileSize);
+            static_cast<int>((bounds.position.x + bounds.size.x) / tileSize);
 
         int topTile =
-            static_cast<int>(playerBounds.position.y / tileSize);
+            static_cast<int>(bounds.position.y / tileSize);
 
         int bottomTile =
-            static_cast<int>((playerBounds.position.y + playerBounds.size.y) / tileSize);
+            static_cast<int>((bounds.position.y + bounds.size.y) / tileSize);
 
         //Is player outside of map?
         if (leftTile < 0 || rightTile >= static_cast<int>(layout[0].size()) ||
@@ -250,3 +297,5 @@ std::string Game::getDoorDirection(const sf::FloatRect& playerBounds, Room* room
 
     return "";
 }
+
+

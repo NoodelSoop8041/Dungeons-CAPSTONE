@@ -1,6 +1,4 @@
-#pragma once
-#include <vector>
-#include <string>
+#include "includes.hpp"
 
 class Room;
 
@@ -21,18 +19,46 @@ class Character {
         void viewStats();
         void viewMap();
 
+        int getHealth() const;
+        void takeDamage(int damage);
+        void heal(int amount);
+
+        int getStrength() const;
+        void decreaseStrength(int amount);
+        void increaseStrength(int amount);
+        
+        int getDefense() const;
+        void decreaseDefense(int amount);
+        void increaseDefense(int amount);
+
+        std::string getWeapon() const;
+        void setWeapon(const std::string& weapon);
+
+        int getExperience() const;
+        void decreaseExperience(int amount);
+        void increaseExperience(int amount);
+
+        int getLevel() const;
+        void levelUp();
+
         void setCurrentRoom(Room* room);
         Room* getCurrentRoom() const;
 
     private:
 
         std::string name;
+
         int health;
+        int maxHealth;
         int strength;
         int defense;
+
         std::string weapon;
+
         int experience;
+        int levelThreshold;
         int level;
+
 
         std::vector<std::string> inventory;
         std::vector<std::string> lootTable;

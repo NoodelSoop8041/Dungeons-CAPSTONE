@@ -1,5 +1,4 @@
-#include "room.hpp"
-#include  <iostream>
+#include "includes.hpp"
 
 
 Room::Room(const std::string& name, const std::string& description) 
@@ -20,6 +19,7 @@ Room::Room(const std::string& name, const std::string& description)
 	layout[7][4] = TileType::Door; // South wall
 	layout[3][0] = TileType::Door; // West wall
 	layout[3][9] = TileType::Door; // East wall
+
 }
 
 void Room::setNorth(Room* room) { north = room; }
@@ -40,4 +40,18 @@ const std::vector<std::vector<TileType>>& Room::getLayout() const {
 
 void Room::inspect() const {
 	std::cout << "You are in " << name << ". " << description << std::endl;
+}
+
+//Enemies
+void Room::addEnemy(const Enemy& enemy) {
+	enemies.push_back(enemy);
+}
+
+const std::vector<Enemy>& Room::getEnemies() const {
+	return enemies;
+}
+
+std::vector<Enemy>& Room::getEnemies()
+{
+	return enemies;
 }
