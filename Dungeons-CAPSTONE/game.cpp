@@ -58,9 +58,17 @@ void Game::update(float deltaTime) {
     const float enemyMovement = enemySpeed * deltaTime;
 
     for (Enemy& enemy : enemies) {
+
         if (enemy.isAlive()) {
 
-            enemy.moveTowards(playerPosition, enemyMovement);
+            sf::Vector2f movement = enemy.getMoveTowards(playerPosition, enemyMovement);
+
+            sf::FloatRect newBounds = enemy.getBounds();
+            newBounds.position += movement;
+
+            if (canMove(newBounds, currentRoom)) {
+                enemy.move(movement);
+            }
         }
     }
 

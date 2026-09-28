@@ -29,6 +29,9 @@ public:
 
 	void moveTowards(const sf::Vector2f& target, float speed);
 
+	sf::Vector2f getMoveTowards(const sf::Vector2f& target, float speed) const;
+	void move(const sf::Vector2f& movement);
+
 	sf::FloatRect getBounds() const;
 
 private:
