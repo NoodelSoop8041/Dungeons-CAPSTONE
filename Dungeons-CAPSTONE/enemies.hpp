@@ -34,6 +34,13 @@ public:
 
 	sf::FloatRect getBounds() const;
 
+	bool isInAttackRange(const sf::Vector2f& target, float range) const;
+	void attack(Character& target, int damage);
+	
+	bool canAttack() const;
+	void updateAttackCooldown(float deltaTime);
+	void resetAttackCooldown();
+
 private:
 
 	std::string name;
@@ -44,4 +51,7 @@ private:
 	int defense;
 
 	sf::Vector2f position;
+
+	float attackCooldown;
+	float attackTimer;
 };

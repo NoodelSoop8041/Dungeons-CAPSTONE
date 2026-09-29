@@ -9,8 +9,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
 
-#include "enemies.hpp"
 #include "character.hpp"
+#include "enemies.hpp"
 #include "map.hpp"
 #include "room.hpp"
 #include "game.hpp"
