@@ -37,6 +37,20 @@ void Game::processEvents() {
 	}
 }
 
+//Combat helpers
+bool Game::isInRange(const sf::Vector2f first, const sf::Vector2f second, float range) {
+    sf::Vector2f difference = second - first;
+
+    float distance = std::sqrt(
+        difference.x * difference.x +
+        difference.y * difference.y
+    );
+    
+    return distance <= range;
+}
+
+
+
 void Game::update(float deltaTime) {
     sf::Vector2f movement(0.f, 0.f);
 
@@ -49,33 +63,118 @@ void Game::update(float deltaTime) {
 
     Room* currentRoom = player.getCurrentRoom();
 
-    sf::Vector2f playerPosition = playerSprite.getPosition();
+
+    sf::FloatRect newBounds = playerSprite.getGlobalBounds();
+    newBounds.position += movement;
+
+
+    if (canMove(newBounds, currentRoom)) {
+        playerSprite.move(movement);
+    }
+
+    sf::FloatRect playerBounds = playerSprite.getGlobalBounds();
+
+
+    if (checkDoor(playerBounds, currentRoom)) {
+
+        std::string direction = getDoorDirection(playerBounds, currentRoom);
+        Room* nextRoom = getNextRoom(playerBounds, currentRoom);
+
+        if (nextRoom != nullptr) {
+
+            changeRoom(nextRoom, direction);
+        }
+    }
 
     //Enemies
-    std::vector <Enemy>& enemies = currentRoom->getEnemies();
+
+    Room* room = player.getCurrentRoom();
+    std::vector<Enemy>& enemies = room->getEnemies();
+
+    sf::Vector2f playerCenter = playerSprite.getGlobalBounds().getCenter();
 
     const float enemySpeed = 50.0f;
-    const float enemyMovement = enemySpeed * deltaTime;
+    const float enemyStep = enemySpeed * deltaTime;
+    const float enemyAttackRange = 40.0f;
+
+
+    //Enemy attack
 
     for (Enemy& enemy : enemies) {
-
         if (enemy.isAlive()) {
 
-            sf::Vector2f movement = enemy.getMoveTowards(playerPosition, enemyMovement);
+            sf::Vector2f enemyMove = enemy.getMoveTowards(playerCenter, enemyStep);
 
             sf::FloatRect newBounds = enemy.getBounds();
-            newBounds.position += movement;
+            newBounds.position += enemyMove;
 
-            if (canMove(newBounds, currentRoom)) {
-                enemy.move(movement);
+
+            if (canMove(newBounds, room)) {
+                enemy.move(enemyMove);
             }
+
+            enemy.updateAttackCooldown(deltaTime);
+
+            if (enemy.canAttack() && isInRange(enemy.getPosition(), playerCenter, enemyAttackRange)) {
+
+                int oldHealth = player.getHealth();
+
+                enemy.attack(player, enemy.getStrength());
+                enemy.resetAttackCooldown();
+
+                std::cout << "Player health: " << oldHealth << " -> " << player.getHealth() << '\n';
+            }
+
+
+        }
+    }
+
+    const float playerAttackRange = 50.f;
+    const int playerDamage = player.getStrength();
+    const float knockbackDistance = 20.f;
+
+    player.updateAttackCooldown(deltaTime);
+
+    bool attackPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space);
+
+    if (attackPressed && player.canAttack()) {
+
+        player.resetAttackCooldown();
+
+		for (Enemy& enemy : enemies) {
+            
+            if (isInRange(playerCenter, enemy.getPosition(), playerAttackRange)) {
+                if (!enemy.isAlive()) {
+                    continue;
+                }
+
+                enemy.takeDamage(playerDamage);
+
+
+                sf::Vector2f dir = enemy.getPosition() - playerCenter;
+                float length = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+
+                if (length > 0.f) {
+                    dir /= length;
+                    sf::Vector2f offset = dir * knockbackDistance;
+
+                    sf::FloatRect proposed = enemy.getBounds();
+                    proposed.position += offset;
+
+                    if (canMove(proposed, room)) {
+                        enemy.move(offset);
+                    }
+                }
+            }
+
         }
     }
 
     enemySprites.clear();
 
-    for (const Enemy& enemy : enemies)
-    {
+
+    for (const Enemy& enemy : enemies) {
+
         if (enemy.isAlive())
         {
             sf::CircleShape sprite(15.f);
@@ -86,37 +185,16 @@ void Game::update(float deltaTime) {
         }
     }
 
-    //End Enemies
-    
 
-    sf::FloatRect newBounds = playerSprite.getGlobalBounds();
-    newBounds.position += movement;
-
-    if (canMove(newBounds, currentRoom)) {
-        playerSprite.move(movement);
-    }
-
-	sf::FloatRect playerBounds = playerSprite.getGlobalBounds();
-    
-    if (checkDoor(playerBounds, currentRoom)) {
-
-        std::string direction = getDoorDirection(playerBounds, currentRoom);
-		Room* nextRoom = getNextRoom(playerBounds, currentRoom);
-
-        if (nextRoom != nullptr) {
-
-            changeRoom(nextRoom, direction);
-        }
-    }
 }
 
 void Game::render() {
 
     window.clear();
 
-    Room* currentRoom = player.getCurrentRoom();
+    Room* room = player.getCurrentRoom();
 
-    const auto& layout = currentRoom->getLayout();
+    const auto& layout = room->getLayout();
 
     for (std::size_t y = 0; y < layout.size(); y++) {
         for (std::size_t x = 0; x < layout[y].size(); x++) {

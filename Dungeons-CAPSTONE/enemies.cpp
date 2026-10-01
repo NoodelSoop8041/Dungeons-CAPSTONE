@@ -1,16 +1,20 @@
 #include "includes.hpp"
 
-Enemy::Enemy() : 
-	name("basic enemy"), 
-	health(10), maxHealth(10), 
-	strength(1), defense(1), 
-	position(0.f, 0.f) {}
+Enemy::Enemy() :
+	name("basic enemy"),
+	health(10), maxHealth(10),
+	strength(1), defense(1),
+	position(0.f, 0.f),
+	attackCooldown(1.0f),
+	attackTimer(0.0f) {}
 
 Enemy::Enemy(const std::string name, int health, int strength, int defense) :
 	name(name), 
 	health(health), maxHealth(health), 
 	strength(strength), defense(defense), 
-	position(0.f, 0.f) {}
+	position(0.f, 0.f),
+	attackCooldown(1.0f),
+	attackTimer(0.0f) {}
 
 std::string Enemy::getName() const {
 	return name;
@@ -79,7 +83,7 @@ void Enemy::setPosition(const sf::Vector2f& position) {
 
 sf::Vector2f Enemy::getMoveTowards(const sf::Vector2f& target, float speed) const {
 
-	sf::Vector2f direction = target - position;
+	sf::Vector2f direction = target - getBounds().getCenter();
 
 	float length = std::sqrt(
 		direction.x * direction.x +
@@ -98,4 +102,28 @@ void Enemy::move(const sf::Vector2f& movement) {
 
 sf::FloatRect Enemy::getBounds() const {
 	return sf::FloatRect(position, sf::Vector2f(30.f, 30.f)); 
+}
+
+void Enemy::attack(Character& target, int damage) {
+	target.takeDamage(damage);
+}
+
+bool Enemy::canAttack() const {
+	return attackTimer <= 0.0f;
+}
+
+void Enemy::updateAttackCooldown(float deltaTime) {
+	if (attackTimer > 0.f) {
+
+		attackTimer -= deltaTime;
+
+		if (attackTimer < 0.f) {
+
+			attackTimer = 0.f;
+		}
+	}
+}
+
+void Enemy::resetAttackCooldown() {
+	attackTimer = attackCooldown;
 }

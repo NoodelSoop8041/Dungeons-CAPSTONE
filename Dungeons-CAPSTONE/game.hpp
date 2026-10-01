@@ -19,6 +19,8 @@ public:
     Game();
     void run();
 
+    bool isInRange(const sf::Vector2f first, const sf::Vector2f second, float range);
+
 private:
     
     bool canMove(const sf::FloatRect& bounds, Room* room);
