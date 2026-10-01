@@ -1,9 +1,4 @@
-#pragma once
-
-#include "character.hpp"
-#include "map.hpp"
-#include <SFML/Graphics.hpp>
-#include  <iostream>
+#include "includes.hpp"
 
 
 class Game {
@@ -14,6 +9,7 @@ private:
 
     sf::RenderWindow window;
 	sf::RectangleShape playerSprite;
+    std::vector<sf::CircleShape> enemySprites;
 
 	const float tileSize = 64.f;
     const float playerSpeed = 2.f;
@@ -23,9 +19,11 @@ public:
     Game();
     void run();
 
+    bool isInRange(const sf::Vector2f first, const sf::Vector2f second, float range);
+
 private:
     
-    bool canMove(const sf::FloatRect& playerBounds, Room* room);
+    bool canMove(const sf::FloatRect& bounds, Room* room);
     bool checkDoor(const sf::FloatRect& playerBounds, Room* room);
 
     Room* getNextRoom(const sf::FloatRect& playerBounds, Room* room);

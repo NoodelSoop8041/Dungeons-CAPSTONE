@@ -1,4 +1,4 @@
-#include "map.hpp"
+#include "includes.hpp"
 
 
 
@@ -20,6 +20,24 @@ void Map::createMap() {
     Room* library = &rooms[2];
     Room* storage = &rooms[3];
     Room* bossRoom = &rooms[4];
+
+    //Protype enemy addition
+    Enemy goblin("Goblin", 15, 3, 1);
+    goblin.setPosition(sf::Vector2f(300.f, 200.f));
+    armory->addEnemy(goblin);
+
+    Enemy goblin2("Goblin", 15, 3, 1);
+    goblin2.setPosition(sf::Vector2f(450.f, 250.f));
+    armory->addEnemy(goblin2);
+
+    for (const Enemy& enemy : armory->getEnemies())
+    {
+        std::cout << "Enemy: " << enemy.getName() << std::endl;
+        std::cout << "Health: " << enemy.getHealth() << std::endl;
+        std::cout << "Position: "
+            << enemy.getPosition().x << ", "
+            << enemy.getPosition().y << std::endl;
+    }
 
     entrance->setNorth(armory);
     entrance->setWest(library);

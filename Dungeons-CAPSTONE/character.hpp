@@ -1,6 +1,4 @@
-#pragma once
-#include <vector>
-#include <string>
+#include "includes.hpp"
 
 class Room;
 
@@ -43,6 +41,11 @@ class Character {
         int getLevel() const;
         void levelUp();
 
+        bool canAttack() const;
+        void updateAttackCooldown(float Deltatime);
+        void resetAttackCooldown();
+        float getAttackTimer() const;
+
         void setCurrentRoom(Room* room);
         Room* getCurrentRoom() const;
 
@@ -60,6 +63,9 @@ class Character {
         int experience;
         int levelThreshold;
         int level;
+        
+        float attackCooldown;
+        float attackTimer;
 
 
         std::vector<std::string> inventory;

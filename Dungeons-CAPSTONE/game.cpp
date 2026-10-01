@@ -1,5 +1,4 @@
-#include "game.hpp"
-#include <algorithm>
+#include "includes.hpp"
 
 
 Game::Game() {
@@ -13,6 +12,7 @@ Game::Game() {
 	playerSprite.setSize({ 40.f, 40.f });
 
     playerSprite.setPosition({ 2.f * tileSize, 2.f * tileSize });
+
 };
 
 void Game::run() {
@@ -37,6 +37,20 @@ void Game::processEvents() {
 	}
 }
 
+//Combat helpers
+bool Game::isInRange(const sf::Vector2f first, const sf::Vector2f second, float range) {
+    sf::Vector2f difference = second - first;
+
+    float distance = std::sqrt(
+        difference.x * difference.x +
+        difference.y * difference.y
+    );
+    
+    return distance <= range;
+}
+
+
+
 void Game::update(float deltaTime) {
     sf::Vector2f movement(0.f, 0.f);
 
@@ -49,32 +63,138 @@ void Game::update(float deltaTime) {
 
     Room* currentRoom = player.getCurrentRoom();
 
+
     sf::FloatRect newBounds = playerSprite.getGlobalBounds();
     newBounds.position += movement;
+
 
     if (canMove(newBounds, currentRoom)) {
         playerSprite.move(movement);
     }
 
-	sf::FloatRect playerBounds = playerSprite.getGlobalBounds();
-    
+    sf::FloatRect playerBounds = playerSprite.getGlobalBounds();
+
+
     if (checkDoor(playerBounds, currentRoom)) {
 
         std::string direction = getDoorDirection(playerBounds, currentRoom);
-		Room* nextRoom = getNextRoom(playerBounds, currentRoom);
+        Room* nextRoom = getNextRoom(playerBounds, currentRoom);
 
         if (nextRoom != nullptr) {
 
             changeRoom(nextRoom, direction);
         }
     }
+
+    //Enemies
+
+    Room* room = player.getCurrentRoom();
+    std::vector<Enemy>& enemies = room->getEnemies();
+
+    sf::Vector2f playerCenter = playerSprite.getGlobalBounds().getCenter();
+
+    const float enemySpeed = 50.0f;
+    const float enemyStep = enemySpeed * deltaTime;
+    const float enemyAttackRange = 40.0f;
+
+
+    //Enemy attack
+
+    for (Enemy& enemy : enemies) {
+        if (enemy.isAlive()) {
+
+            sf::Vector2f enemyMove = enemy.getMoveTowards(playerCenter, enemyStep);
+
+            sf::FloatRect newBounds = enemy.getBounds();
+            newBounds.position += enemyMove;
+
+
+            if (canMove(newBounds, room)) {
+                enemy.move(enemyMove);
+            }
+
+            enemy.updateAttackCooldown(deltaTime);
+
+            if (enemy.canAttack() && isInRange(enemy.getPosition(), playerCenter, enemyAttackRange)) {
+
+                int oldHealth = player.getHealth();
+
+                enemy.attack(player, enemy.getStrength());
+                enemy.resetAttackCooldown();
+
+                std::cout << "Player health: " << oldHealth << " -> " << player.getHealth() << '\n';
+            }
+
+
+        }
+    }
+
+    const float playerAttackRange = 50.f;
+    const int playerDamage = player.getStrength();
+    const float knockbackDistance = 20.f;
+
+    player.updateAttackCooldown(deltaTime);
+
+    bool attackPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space);
+
+    if (attackPressed && player.canAttack()) {
+
+        player.resetAttackCooldown();
+
+		for (Enemy& enemy : enemies) {
+            
+            if (isInRange(playerCenter, enemy.getPosition(), playerAttackRange)) {
+                if (!enemy.isAlive()) {
+                    continue;
+                }
+
+                enemy.takeDamage(playerDamage);
+
+
+                sf::Vector2f dir = enemy.getPosition() - playerCenter;
+                float length = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+
+                if (length > 0.f) {
+                    dir /= length;
+                    sf::Vector2f offset = dir * knockbackDistance;
+
+                    sf::FloatRect proposed = enemy.getBounds();
+                    proposed.position += offset;
+
+                    if (canMove(proposed, room)) {
+                        enemy.move(offset);
+                    }
+                }
+            }
+
+        }
+    }
+
+    enemySprites.clear();
+
+
+    for (const Enemy& enemy : enemies) {
+
+        if (enemy.isAlive())
+        {
+            sf::CircleShape sprite(15.f);
+            sprite.setFillColor(sf::Color::Red);
+            sprite.setPosition(enemy.getPosition());
+
+            enemySprites.push_back(sprite);
+        }
+    }
+
+
 }
 
 void Game::render() {
-    window.clear();
-    Room* currentRoom = player.getCurrentRoom();
 
-    const auto& layout = currentRoom->getLayout();
+    window.clear();
+
+    Room* room = player.getCurrentRoom();
+
+    const auto& layout = room->getLayout();
 
     for (std::size_t y = 0; y < layout.size(); y++) {
         for (std::size_t x = 0; x < layout[y].size(); x++) {
@@ -100,25 +220,30 @@ void Game::render() {
 
     window.draw(playerSprite);
 
+    //Enemy render
+    for (const sf::CircleShape& sprite : enemySprites)
+    {
+        window.draw(sprite);
+    }
     window.display();
 }
 
-bool Game::canMove(const sf::FloatRect& playerBounds, Room* room) {
+bool Game::canMove(const sf::FloatRect& bounds, Room* room) {
         const auto& layout = room->getLayout();
         const float tileSize = 64.f;
 
-        //Find tiles occupied by player
+        //Find tiles occupied by player/enemy
         int leftTile = 
-            static_cast<int>(playerBounds.position.x / tileSize);
+            static_cast<int>(bounds.position.x / tileSize);
 
         int rightTile = 
-            static_cast<int>((playerBounds.position.x + playerBounds.size.x) / tileSize);
+            static_cast<int>((bounds.position.x + bounds.size.x) / tileSize);
 
         int topTile =
-            static_cast<int>(playerBounds.position.y / tileSize);
+            static_cast<int>(bounds.position.y / tileSize);
 
         int bottomTile =
-            static_cast<int>((playerBounds.position.y + playerBounds.size.y) / tileSize);
+            static_cast<int>((bounds.position.y + bounds.size.y) / tileSize);
 
         //Is player outside of map?
         if (leftTile < 0 || rightTile >= static_cast<int>(layout[0].size()) ||
@@ -250,3 +375,5 @@ std::string Game::getDoorDirection(const sf::FloatRect& playerBounds, Room* room
 
     return "";
 }
+
+

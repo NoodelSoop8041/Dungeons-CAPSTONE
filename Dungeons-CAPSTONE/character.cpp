@@ -1,16 +1,4 @@
-#include "character.hpp"
-#include <iostream>
-
-// Functions of the dungeons:
-// 1. Character creation (includes weapons and stats)
-// 2. Character movement (creating a map and moving between rooms)
-// 3. Character combat (boss creation and attacks)
-// 4. Character inventory (inherited from creation / includes leveling)
-// 5. Visuals (this will be a work in progress)
-
-//What can the charcter do?
-// Move (up, down, left, right), inspect rooms, attack, pick up items, inventory,
-// use items, view stats, view map (maybe get to this)
+#include "includes.hpp"
 
 //Character class constructor
 Character::Character() {
@@ -20,9 +8,14 @@ Character::Character() {
     strength = 1;
     defense = 1;
     weapon = "Fists";
+
     experience = 0;
     levelThreshold = 10;
     level = 1;
+
+    attackCooldown = 0.5f;
+    attackTimer = 0.0f;
+
     inventory = {};
     currentRoom = nullptr;
 
@@ -147,6 +140,33 @@ void Character::levelUp() {
     increaseDefense(1); 
     increaseStrength(1); 
 }
+
+bool Character::canAttack() const {
+    return attackTimer <= 0.f;
+}
+
+void Character::updateAttackCooldown(float deltaTime) {
+
+    if (attackTimer > 0.f) {
+
+        attackTimer -= deltaTime;
+
+        if (attackTimer < 0.f) {
+            attackTimer = 0.f;
+        }
+    }
+}
+
+void Character::resetAttackCooldown() {
+    attackTimer = attackCooldown;
+}
+
+float Character::getAttackTimer() const
+{
+    return attackTimer;
+}
+
+
 
 
 void Character::setCurrentRoom(Room* room) { currentRoom = room; }
