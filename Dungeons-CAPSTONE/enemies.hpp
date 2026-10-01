@@ -34,12 +34,15 @@ public:
 
 	sf::FloatRect getBounds() const;
 
+	//Attack members - these should be moved into their own combat class later
 	bool isInAttackRange(const sf::Vector2f& target, float range) const;
 	void attack(Character& target, int damage);
 	
 	bool canAttack() const;
 	void updateAttackCooldown(float deltaTime);
 	void resetAttackCooldown();
+
+	void knockback(const sf::Vector2f& direction, float distance);
 
 private:
 

@@ -104,18 +104,6 @@ sf::FloatRect Enemy::getBounds() const {
 	return sf::FloatRect(position, sf::Vector2f(30.f, 30.f)); 
 }
 
-bool Enemy::isInAttackRange(const sf::Vector2f& target, float range) const {
-
-	sf::Vector2f difference = target - position;
-
-	float distance = std::sqrt(
-		difference.x * difference.x +
-		difference.y * difference.y
-	);
-
-	return distance <= range;
-}
-
 void Enemy::attack(Character& target, int damage) {
 	target.takeDamage(damage);
 }
@@ -138,4 +126,8 @@ void Enemy::updateAttackCooldown(float deltaTime) {
 
 void Enemy::resetAttackCooldown() {
 	attackTimer = attackCooldown;
+}
+
+void Enemy::knockback(const sf::Vector2f& direction, float distance) {
+	
 }
