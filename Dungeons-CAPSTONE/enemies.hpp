@@ -27,22 +27,18 @@ public:
 	sf::Vector2f getPosition() const;
 	void setPosition(const sf::Vector2f& position);
 
-	void moveTowards(const sf::Vector2f& target, float speed);
-
 	sf::Vector2f getMoveTowards(const sf::Vector2f& target, float speed) const;
 	void move(const sf::Vector2f& movement);
 
 	sf::FloatRect getBounds() const;
 
 	//Attack members - these should be moved into their own combat class later
-	bool isInAttackRange(const sf::Vector2f& target, float range) const;
 	void attack(Character& target, int damage);
 	
 	bool canAttack() const;
 	void updateAttackCooldown(float deltaTime);
 	void resetAttackCooldown();
 
-	void knockback(const sf::Vector2f& direction, float distance);
 
 private:
 
