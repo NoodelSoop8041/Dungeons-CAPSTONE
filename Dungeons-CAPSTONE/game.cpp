@@ -96,36 +96,6 @@ void Game::update(float deltaTime) {
     const float enemyAttackRange = 40.0f;
 
 
-    for (Enemy& enemy : enemies) {
-
-        if (enemy.isAlive()) {
-
-            sf::Vector2f movement = enemy.getMoveTowards(playerPosition, enemyStep);
-
-            sf::FloatRect newBounds = enemy.getBounds();
-            newBounds.position += movement;
-
-            if (canMove(newBounds, currentRoom)) {
-                enemy.move(movement);
-            }
-        }
-    }
-
-    enemySprites.clear();
-
-
-    for (const Enemy& enemy : enemies) {
-
-        if (enemy.isAlive())
-        {
-            sf::CircleShape sprite(15.f);
-            sprite.setFillColor(sf::Color::Red);
-            sprite.setPosition(enemy.getPosition());
-
-            enemySprites.push_back(sprite);
-        }
-    }
-
     //Enemy attack
 
     player.updateAttackCooldown(deltaTime);
@@ -164,7 +134,6 @@ void Game::update(float deltaTime) {
 
             sf::Vector2f enemyPosition = enemy.getPosition();
 
-
             
             if (attack && isInRange(playerPosition, enemyPosition, playerAttackRange)) {
 
@@ -180,10 +149,20 @@ void Game::update(float deltaTime) {
         }
     }
 
-    player.updateAttackCooldown(deltaTime);
+    enemySprites.clear();
 
-    std::cout << "Player attack timer: "
-        << player.getAttackTimer() << '\n';
+
+    for (const Enemy& enemy : enemies) {
+
+        if (enemy.isAlive())
+        {
+            sf::CircleShape sprite(15.f);
+            sprite.setFillColor(sf::Color::Red);
+            sprite.setPosition(enemy.getPosition());
+
+            enemySprites.push_back(sprite);
+        }
+    }
 
 
 }
