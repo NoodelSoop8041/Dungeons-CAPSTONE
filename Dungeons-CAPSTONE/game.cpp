@@ -63,8 +63,6 @@ void Game::update(float deltaTime) {
 
     Room* currentRoom = player.getCurrentRoom();
 
-    sf::Vector2f playerPosition = playerSprite.getPosition();
-
 
     sf::FloatRect newBounds = playerSprite.getGlobalBounds();
     newBounds.position += movement;
@@ -89,7 +87,11 @@ void Game::update(float deltaTime) {
     }
 
     //Enemies
-    std::vector <Enemy>& enemies = currentRoom->getEnemies();
+
+    Room* room = player.getCurrentRoom();
+    std::vector<Enemy>& enemies = room->getEnemies();
+
+    sf::Vector2f playerCenter = playerSprite.getGlobalBounds().getCenter();
 
     const float enemySpeed = 50.0f;
     const float enemyStep = enemySpeed * deltaTime;
@@ -101,19 +103,19 @@ void Game::update(float deltaTime) {
     for (Enemy& enemy : enemies) {
         if (enemy.isAlive()) {
 
-            sf::Vector2f enemyMove = enemy.getMoveTowards(playerPosition, enemyStep);
+            sf::Vector2f enemyMove = enemy.getMoveTowards(playerCenter, enemyStep);
 
             sf::FloatRect newBounds = enemy.getBounds();
             newBounds.position += enemyMove;
 
 
-            if (canMove(newBounds, currentRoom)) {
+            if (canMove(newBounds, room)) {
                 enemy.move(enemyMove);
             }
 
             enemy.updateAttackCooldown(deltaTime);
 
-            if (enemy.canAttack() && isInRange(enemy.getPosition(), playerPosition, enemyAttackRange)) {
+            if (enemy.canAttack() && isInRange(enemy.getPosition(), playerCenter, enemyAttackRange)) {
 
                 int oldHealth = player.getHealth();
 
@@ -141,7 +143,7 @@ void Game::update(float deltaTime) {
 
 		for (Enemy& enemy : enemies) {
             
-            if (isInRange(playerPosition, enemy.getPosition(), playerAttackRange)) {
+            if (isInRange(playerCenter, enemy.getPosition(), playerAttackRange)) {
                 if (!enemy.isAlive()) {
                     continue;
                 }
@@ -149,7 +151,7 @@ void Game::update(float deltaTime) {
                 enemy.takeDamage(playerDamage);
 
 
-                sf::Vector2f dir = enemy.getPosition() - playerPosition;
+                sf::Vector2f dir = enemy.getPosition() - playerCenter;
                 float length = std::sqrt(dir.x * dir.x + dir.y * dir.y);
 
                 if (length > 0.f) {
@@ -159,7 +161,7 @@ void Game::update(float deltaTime) {
                     sf::FloatRect proposed = enemy.getBounds();
                     proposed.position += offset;
 
-                    if (canMove(proposed, currentRoom)) {
+                    if (canMove(proposed, room)) {
                         enemy.move(offset);
                     }
                 }
@@ -190,9 +192,9 @@ void Game::render() {
 
     window.clear();
 
-    Room* currentRoom = player.getCurrentRoom();
+    Room* room = player.getCurrentRoom();
 
-    const auto& layout = currentRoom->getLayout();
+    const auto& layout = room->getLayout();
 
     for (std::size_t y = 0; y < layout.size(); y++) {
         for (std::size_t x = 0; x < layout[y].size(); x++) {

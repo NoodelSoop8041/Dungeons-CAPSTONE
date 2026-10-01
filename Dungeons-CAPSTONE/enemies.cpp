@@ -83,7 +83,7 @@ void Enemy::setPosition(const sf::Vector2f& position) {
 
 sf::Vector2f Enemy::getMoveTowards(const sf::Vector2f& target, float speed) const {
 
-	sf::Vector2f direction = target - position;
+	sf::Vector2f direction = target - getBounds().getCenter();
 
 	float length = std::sqrt(
 		direction.x * direction.x +
