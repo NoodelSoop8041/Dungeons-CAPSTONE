@@ -98,10 +98,6 @@ void Game::update(float deltaTime) {
 
     //Enemy attack
 
-    player.updateAttackCooldown(deltaTime);
-
-    bool attack = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space);
-
     for (Enemy& enemy : enemies) {
         if (enemy.isAlive()) {
 
@@ -128,24 +124,30 @@ void Game::update(float deltaTime) {
             }
 
 
+        }
+    }
 
-            const float playerAttackRange = 50.f;
-            const int playerDamage = player.getStrength();
+    const float playerAttackRange = 50.f;
+    const int playerDamage = player.getStrength();
 
-            sf::Vector2f enemyPosition = enemy.getPosition();
+    player.updateAttackCooldown(deltaTime);
 
-            
-            if (attack && isInRange(playerPosition, enemyPosition, playerAttackRange)) {
+    bool attackPressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space);
 
-                if (player.canAttack()) {
-                    enemy.takeDamage(playerDamage);
+    if (attackPressed && player.canAttack()) {
 
-                    player.resetAttackCooldown();
+        player.resetAttackCooldown();
 
-                    std::cout << "Enemy health: " << enemy.getHealth() << "\n";
-                }
-            }
+		for (Enemy& enemy : enemies) {
 
+			if (!enemy.isAlive()) {
+				continue;
+			}
+
+            enemy.takeDamage(playerDamage);
+
+
+            std::cout << "Enemy health: " << enemy.getHealth() << "\n";
         }
     }
 
