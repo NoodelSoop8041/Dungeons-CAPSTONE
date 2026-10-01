@@ -129,6 +129,7 @@ void Game::update(float deltaTime) {
 
     const float playerAttackRange = 50.f;
     const int playerDamage = player.getStrength();
+    const float knockbackDistance = 20.f;
 
     player.updateAttackCooldown(deltaTime);
 
@@ -139,15 +140,31 @@ void Game::update(float deltaTime) {
         player.resetAttackCooldown();
 
 		for (Enemy& enemy : enemies) {
+            
+            if (isInRange(playerPosition, enemy.getPosition(), playerAttackRange)) {
+                if (!enemy.isAlive()) {
+                    continue;
+                }
 
-			if (!enemy.isAlive()) {
-				continue;
-			}
-
-            enemy.takeDamage(playerDamage);
+                enemy.takeDamage(playerDamage);
 
 
-            std::cout << "Enemy health: " << enemy.getHealth() << "\n";
+                sf::Vector2f dir = enemy.getPosition() - playerPosition;
+                float length = std::sqrt(dir.x * dir.x + dir.y * dir.y);
+
+                if (length > 0.f) {
+                    dir /= length;
+                    sf::Vector2f offset = dir * knockbackDistance;
+
+                    sf::FloatRect proposed = enemy.getBounds();
+                    proposed.position += offset;
+
+                    if (canMove(proposed, currentRoom)) {
+                        enemy.move(offset);
+                    }
+                }
+            }
+
         }
     }
 

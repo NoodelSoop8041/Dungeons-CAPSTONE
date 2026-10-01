@@ -127,7 +127,3 @@ void Enemy::updateAttackCooldown(float deltaTime) {
 void Enemy::resetAttackCooldown() {
 	attackTimer = attackCooldown;
 }
-
-void Enemy::knockback(const sf::Vector2f& direction, float distance) {
-	
-}
