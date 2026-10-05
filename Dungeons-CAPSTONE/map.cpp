@@ -31,14 +31,6 @@ void Map::createMap() {
     goblin2.setPosition(sf::Vector2f(450.f, 250.f));
     armory->addEnemy(goblin2);
 
-    for (const Enemy& enemy : armory->getEnemies())
-    {
-        std::cout << "Enemy: " << enemy.getName() << std::endl;
-        std::cout << "Health: " << enemy.getHealth() << std::endl;
-        std::cout << "Position: "
-            << enemy.getPosition().x << ", "
-            << enemy.getPosition().y << std::endl;
-    }
 
     entrance->setNorth(armory);
     entrance->setWest(library);

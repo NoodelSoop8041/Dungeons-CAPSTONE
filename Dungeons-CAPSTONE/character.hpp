@@ -28,6 +28,8 @@ class Character {
         void takeDamage(int damage);
         void heal(int amount);
 
+        int getMaxHealth() const;
+
         int getStrength() const;
         void decreaseStrength(int amount);
         void increaseStrength(int amount);
@@ -45,6 +47,7 @@ class Character {
 
         int getLevel() const;
         void levelUp();
+		int getLevelThreshold() const;
 
         bool canAttack() const;
         void updateAttackCooldown(float Deltatime);

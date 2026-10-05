@@ -14,6 +14,10 @@ Game::Game() {
 		sf::VideoMode({ roomWidth, roomHeight + hudHeight }),
 		"Dungeon Crawler"
 	);
+    if (!font.openFromFile("assets/font.ttf")) {
+		std::cerr << "Failed to load assets/font.ttf" << std::endl;
+		// Handle error appropriately (e.g., throw an exception, exit the program, etc.)
+    }
     window.setFramerateLimit(60);
 
 	playerSprite.setSize({ 40.f, 40.f });
@@ -127,11 +131,11 @@ void Game::update(float deltaTime) {
 
             sf::Vector2f enemyMove = enemy.getMoveTowards(playerCenter, enemyStep);
 
-            sf::FloatRect newBounds = enemy.getBounds();
-            newBounds.position += enemyMove;
+            sf::FloatRect enemyBounds = enemy.getBounds();
+            enemyBounds.position += enemyMove;
 
 
-            if (canMove(newBounds, room)) {
+            if (canMove(enemyBounds, room)) {
                 enemy.move(enemyMove);
             }
 
@@ -145,8 +149,6 @@ void Game::update(float deltaTime) {
 
                 enemy.attack(player, enemy.getStrength());
                 enemy.resetAttackCooldown();
-
-                std::cout << "Player health: " << oldHealth << " -> " << player.getHealth() << '\n';
             }
 
 
@@ -179,7 +181,7 @@ void Game::update(float deltaTime) {
                     continue;
                 }
 
-                sf::Vector2f dir = enemy.getPosition() - playerCenter;
+                sf::Vector2f dir = enemyCenter - playerCenter;
                 float length = std::sqrt(dir.x * dir.x + dir.y * dir.y);
 
                 if (length > 0.f) {
@@ -217,6 +219,35 @@ void Game::update(float deltaTime) {
     }
 }
 
+void Game::drawHud() {
+
+    sf::RectangleShape bar({ static_cast<float>(roomWidth), static_cast<float>(hudHeight) });
+	bar.setPosition({ 0.f, static_cast<float>(roomHeight) });
+    bar.setFillColor(sf::Color(20, 20, 20));
+    window.draw(bar);
+
+    sf::Text text(font, "", 20);
+	text.setPosition({ 10.f, roomHeight + 10.f });
+
+	std::string hudString = "Health: " + std::to_string(player.getHealth()) + "/" + std::to_string(player.getMaxHealth()) +
+		" | Level: " + std::to_string(player.getLevel()) +
+		" | Experience: " + std::to_string(player.getExperience()) + "/" + std::to_string(player.getLevelThreshold());
+
+	text.setString(hudString);
+    window.draw(text);
+}
+
+void Game::drawOverlay(const std::string& message) {
+
+    sf::RectangleShape dim({ static_cast<float>(roomWidth), static_cast<float>(roomHeight) });
+    dim.setFillColor(sf::Color(0, 0, 0, 150));
+    window.draw(dim);
+    sf::Text text(font, message, 30);
+    text.setFillColor(sf::Color::White);
+    text.setOrigin(text.getLocalBounds().getCenter());
+    text.setPosition({ roomWidth / 2.f, roomHeight / 2.f });
+    window.draw(text);
+}
 
 void Game::render() {
 
@@ -255,8 +286,15 @@ void Game::render() {
     {
         window.draw(sprite);
     }
+
+    drawHud();
+
+    if (state == GameState::Lost) { drawOverlay("YOU DIED : press Esc to Restart"); }
+
     window.display();
 }
+
+
 
 bool Game::canMove(const sf::FloatRect& bounds, Room* room) {
         const auto& layout = room->getLayout();

@@ -30,6 +30,8 @@ private:
 	const float tileSize = 64.f;
     const float playerSpeed = 2.f;
 
+    sf::Font font;
+
 public:
 
     Game();
@@ -54,6 +56,10 @@ private:
     void render();
 
     void reset();
+
+	void drawHud();
+    void drawOverlay(const std::string& message);
+
 
 	//Duplicate of layout size, known coupling, but it works for v1.0
     static constexpr unsigned roomWidth = 640; //10 tiles * 64 pixels

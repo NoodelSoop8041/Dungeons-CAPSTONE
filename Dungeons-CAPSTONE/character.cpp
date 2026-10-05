@@ -62,6 +62,10 @@ void Character::heal(int amount) {
     }
 } 
 
+int Character::getMaxHealth() const {
+	return maxHealth;
+}
+
 int Character::getStrength() const {
     return strength; 
 } 
@@ -138,7 +142,11 @@ void Character::levelUp() {
     maxHealth += 5;
     heal(5);
     increaseDefense(1); 
-    increaseStrength(1); 
+    increaseStrength(1);
+}
+
+int Character::getLevelThreshold() const {
+	return levelThreshold;
 }
 
 bool Character::canAttack() const {
