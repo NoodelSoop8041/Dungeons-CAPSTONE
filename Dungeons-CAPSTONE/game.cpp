@@ -5,6 +5,15 @@
 #include <cmath>
 #include <optional>
 
+namespace {
+    int calculateDamage(int attackerStrength, int defenderDefense) {
+		int damage = attackerStrength - defenderDefense;
+        if (damage < 1) {
+            damage = 1;
+        }
+        return damage;
+    }
+}
 
 
 Game::Game() {
@@ -145,9 +154,8 @@ void Game::update(float deltaTime) {
 
             if (enemy.canAttack() && isInRange(enemyCenter, playerCenter, enemyAttackRange)) {
 
-                int oldHealth = player.getHealth();
-
-                enemy.attack(player, enemy.getStrength());
+				const int damage = calculateDamage(enemy.getStrength(), player.getDefense());
+                enemy.attack(player, damage);
                 enemy.resetAttackCooldown();
             }
 
@@ -156,7 +164,6 @@ void Game::update(float deltaTime) {
     }
 
     const float playerAttackRange = 50.f;
-    const int playerDamage = player.getStrength();
     const float knockbackDistance = 20.f;
 
     player.updateAttackCooldown(deltaTime);
@@ -172,7 +179,11 @@ void Game::update(float deltaTime) {
 
             sf::Vector2f enemyCenter = enemy.getBounds().getCenter();
 
+
             if (isInRange(playerCenter, enemyCenter, playerAttackRange)) {
+                
+                const int playerDamage = 
+                    calculateDamage(player.getStrength(), enemy.getDefense());
 
                 enemy.takeDamage(playerDamage);
 
@@ -384,14 +395,6 @@ Room* Game::getNextRoom(const sf::FloatRect& playerBounds, Room* room) {
 
 void Game::changeRoom(Room* newRoom, const std::string& direction) {
     if (newRoom != nullptr) {
-
-        std::cout << "Changing room to: "
-            << newRoom->getName()
-            << std::endl;
-
-        std::cout << "Direction: "
-            << direction
-            << std::endl;
 
         player.setCurrentRoom(newRoom);
 

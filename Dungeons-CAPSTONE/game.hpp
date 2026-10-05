@@ -10,8 +10,7 @@
 enum class GameState {
     Playing,
     Won,
-    Lost,
-    MainMenu
+    Lost
 };
 
 
