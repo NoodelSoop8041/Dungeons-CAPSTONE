@@ -1,4 +1,18 @@
-#include "includes.hpp"
+#pragma once
+ 
+#include "character.hpp"
+#include  "map.hpp"
+
+#include <SFML/Graphics.hpp>
+#include <SFML/System/Vector2.hpp>
+
+
+enum class GameState {
+    Playing,
+    Won,
+    Lost,
+    MainMenu
+};
 
 
 class Game {

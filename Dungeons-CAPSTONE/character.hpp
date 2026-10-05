@@ -1,4 +1,9 @@
-#include "includes.hpp"
+#pragma once
+
+#include <iostream>
+#include <string>
+#include <vector>
+
 
 class Room;
 

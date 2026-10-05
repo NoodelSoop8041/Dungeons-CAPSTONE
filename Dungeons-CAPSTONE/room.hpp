@@ -1,4 +1,6 @@
-#include "includes.hpp"
+#pragma once
+#include "enemies.hpp"
+
 
 enum class TileType {
 	Wall,

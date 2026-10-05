@@ -1,4 +1,10 @@
-#include "includes.hpp"
+#pragma once
+
+#include <string>
+#include <SFML/Graphics.hpp>
+#include <SFML/System/Vector2.hpp>
+
+class Character; // Forward declaration
 
 class Enemy {
 

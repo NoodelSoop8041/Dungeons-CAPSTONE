@@ -1,5 +1,6 @@
-#include "includes.hpp"
-
+#pragma once
+#include "room.hpp"
+#include <vector>
 
 class Map {
 

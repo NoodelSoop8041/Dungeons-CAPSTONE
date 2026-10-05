@@ -1,4 +1,4 @@
-#include "includes.hpp"
+#include "character.hpp"
 
 //Character class constructor
 Character::Character() {
