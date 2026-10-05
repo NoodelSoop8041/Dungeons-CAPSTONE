@@ -32,7 +32,7 @@ void Character::pickUpItem(const std::string& item) {}
 
 void Character::useItem(const std::string& item) {}
 
-void Character::viewStats() {
+void Character::viewStats() const {
     std::cout << "Health: " << health << "/" << maxHealth << std::endl;
     std::cout << "Strength: " << strength << std::endl;
     std::cout << "Defense: " << defense << std::endl;

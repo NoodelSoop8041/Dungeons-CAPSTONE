@@ -21,6 +21,8 @@ private:
     Character player;
     Map map;
 
+	GameState state = GameState::Playing;
+
     sf::RenderWindow window;
 	sf::RectangleShape playerSprite;
     std::vector<sf::CircleShape> enemySprites;
@@ -51,5 +53,11 @@ private:
     void update(float deltaTime);
     void render();
 
+    void reset();
+
+	//Duplicate of layout size, known coupling, but it works for v1.0
+    static constexpr unsigned roomWidth = 640; //10 tiles * 64 pixels
+    static constexpr unsigned roomHeight = 512; //8 tiles * 64 pixels
+    static constexpr unsigned hudHeight = 80;
 
 };

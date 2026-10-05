@@ -1,17 +1,21 @@
-#include "includes.hpp"
+#include "enemies.hpp"
+#include "character.hpp"
+#include <cmath>
 
 Enemy::Enemy() :
 	name("basic enemy"),
 	health(10), maxHealth(10),
 	strength(1), defense(1),
+	xpReward(5),
 	position(0.f, 0.f),
 	attackCooldown(1.0f),
 	attackTimer(0.0f) {}
 
-Enemy::Enemy(const std::string name, int health, int strength, int defense) :
-	name(name), 
-	health(health), maxHealth(health), 
-	strength(strength), defense(defense), 
+Enemy::Enemy(const std::string name, int health, int strength, int defense, int xpReward) :
+	name(name),
+	health(health), maxHealth(health),
+	strength(strength), defense(defense),
+	xpReward(xpReward),
 	position(0.f, 0.f),
 	attackCooldown(1.0f),
 	attackTimer(0.0f) {}
@@ -66,6 +70,10 @@ int Enemy::getDefense() const {
 
 void Enemy::increaseDefense(int amount) {
 	defense += amount;
+}
+
+int Enemy::getXpReward() const {
+	return xpReward;
 }
 
 bool Enemy::isAlive() const {

@@ -1,13 +1,20 @@
-#include "includes.hpp"
+#include "game.hpp"
+
+#include <algorithm>
+#include <iostream>
+#include <cmath>
+#include <optional>
+
 
 
 Game::Game() {
     player.setCurrentRoom(map.getStartingRoom());
 
     window.create(
-		sf::VideoMode({ 1920, 1080 }),
+		sf::VideoMode({ roomWidth, roomHeight + hudHeight }),
 		"Dungeon Crawler"
 	);
+    window.setFramerateLimit(60);
 
 	playerSprite.setSize({ 40.f, 40.f });
 
@@ -30,11 +37,24 @@ void Game::run() {
 
 //Closing window (eventually will include open inventory, interaction, attack, pausing)
 void Game::processEvents() {
-	while (const std::optional event = window.pollEvent()) {
-		if (event->is<sf::Event::Closed>()) {
-			window.close();
-		}
-	}
+    while (const std::optional event = window.pollEvent()) {
+        if (event->is<sf::Event::Closed>()) {
+            window.close();
+        }
+        if (const auto* key = event->getIf<sf::Event::KeyPressed>()) {
+            if (key->code == sf::Keyboard::Key::Escape && state != GameState::Playing) {
+                reset();
+            }
+        }
+    }
+}
+
+void Game::reset() {
+	player = Character();
+    map = Map();
+	player.setCurrentRoom(map.getStartingRoom());
+	playerSprite.setPosition({2.f * tileSize, 2.f * tileSize});
+    state = GameState::Playing;
 }
 
 //Combat helpers
@@ -52,6 +72,8 @@ bool Game::isInRange(const sf::Vector2f first, const sf::Vector2f second, float 
 
 
 void Game::update(float deltaTime) {
+    if (state != GameState::Playing) { return; }
+
     sf::Vector2f movement(0.f, 0.f);
 
     float speed = playerSpeed * deltaTime * 60.f;
@@ -113,9 +135,11 @@ void Game::update(float deltaTime) {
                 enemy.move(enemyMove);
             }
 
+
+            sf::Vector2f enemyCenter = enemy.getBounds().getCenter();
             enemy.updateAttackCooldown(deltaTime);
 
-            if (enemy.canAttack() && isInRange(enemy.getPosition(), playerCenter, enemyAttackRange)) {
+            if (enemy.canAttack() && isInRange(enemyCenter, playerCenter, enemyAttackRange)) {
 
                 int oldHealth = player.getHealth();
 
@@ -141,15 +165,19 @@ void Game::update(float deltaTime) {
 
         player.resetAttackCooldown();
 
-		for (Enemy& enemy : enemies) {
-            
-            if (isInRange(playerCenter, enemy.getPosition(), playerAttackRange)) {
-                if (!enemy.isAlive()) {
-                    continue;
-                }
+        for (Enemy& enemy : enemies) {
+            if (!enemy.isAlive()) { continue; }
+
+            sf::Vector2f enemyCenter = enemy.getBounds().getCenter();
+
+            if (isInRange(playerCenter, enemyCenter, playerAttackRange)) {
 
                 enemy.takeDamage(playerDamage);
 
+                if (!enemy.isAlive()) {
+                    player.increaseExperience(enemy.getXpReward());
+                    continue;
+                }
 
                 sf::Vector2f dir = enemy.getPosition() - playerCenter;
                 float length = std::sqrt(dir.x * dir.x + dir.y * dir.y);
@@ -166,7 +194,6 @@ void Game::update(float deltaTime) {
                     }
                 }
             }
-
         }
     }
 
@@ -185,8 +212,11 @@ void Game::update(float deltaTime) {
         }
     }
 
-
+    if (player.getHealth() <= 0) {
+		state = GameState::Lost;
+    }
 }
+
 
 void Game::render() {
 

@@ -12,7 +12,7 @@ public:
 
 	Enemy();
 
-	Enemy(const std::string name, int health, int strength, int defense);
+	Enemy(const std::string name, int health, int strength, int defense, int xpReward);
 
 	std::string getName() const;
 	void setName(const std::string& name);
@@ -27,6 +27,8 @@ public:
 	int getDefense() const;
 	void decreaseDefense(int amount);
 	void increaseDefense(int amount);
+
+	int getXpReward() const;
 
 	bool isAlive() const;
 
@@ -54,6 +56,8 @@ private:
 	int maxHealth;
 	int strength;
 	int defense;
+
+	int xpReward;
 
 	sf::Vector2f position;
 

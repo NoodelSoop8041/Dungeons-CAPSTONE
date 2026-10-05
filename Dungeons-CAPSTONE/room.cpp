@@ -1,4 +1,7 @@
-#include "includes.hpp"
+#include "room.hpp"
+#include <string>
+#include <vector>
+#include <iostream>
 
 
 Room::Room(const std::string& name, const std::string& description) 

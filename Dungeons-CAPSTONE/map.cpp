@@ -23,11 +23,11 @@ void Map::createMap() {
     Room* bossRoom = &rooms[4];
 
     //Protype enemy addition
-    Enemy goblin("Goblin", 15, 3, 1);
+    Enemy goblin("Goblin", 15, 3, 1, 5);
     goblin.setPosition(sf::Vector2f(300.f, 200.f));
     armory->addEnemy(goblin);
 
-    Enemy goblin2("Goblin", 15, 3, 1);
+    Enemy goblin2("Goblin", 15, 3, 1, 5);
     goblin2.setPosition(sf::Vector2f(450.f, 250.f));
     armory->addEnemy(goblin2);
 

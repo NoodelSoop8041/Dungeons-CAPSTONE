@@ -21,7 +21,7 @@ class Character {
         void attack();
         void pickUpItem(const std::string& item);
         void useItem(const std::string& item);
-        void viewStats();
+        void viewStats() const;
         void viewMap();
 
         int getHealth() const;
