@@ -4,8 +4,8 @@
 
 Enemy::Enemy() :
 	name("basic enemy"),
-	health(10), maxHealth(10),
-	strength(1), defense(1),
+	health(4), maxHealth(4),
+	strength(2), defense(0),
 	xpReward(5),
 	position(0.f, 0.f),
 	attackCooldown(1.0f),
