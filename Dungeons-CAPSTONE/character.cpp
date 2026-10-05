@@ -140,7 +140,7 @@ void Character::levelUp() {
 
     level++;
     maxHealth += 5;
-    heal(5);
+    heal(maxHealth - health);
     increaseDefense(1); 
     increaseStrength(1);
 }
