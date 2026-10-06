@@ -37,8 +37,8 @@ void Character::viewStats() const {
     std::cout << "Strength: " << strength << std::endl;
     std::cout << "Defense: " << defense << std::endl;
     std::cout << "Weapon: " << weapon << std::endl;
-    std::cout << "Experience: " << experience << std::endl;
-    std::cout << "Level: " << level << "/" << levelThreshold << std::endl;
+    std::cout << "Experience: " << experience << "/" << levelThreshold << std::endl;
+    std::cout << "Level: " << level << std::endl;
 }
 
 void Character::viewMap() {}
@@ -140,7 +140,7 @@ void Character::levelUp() {
 
     level++;
     maxHealth += 5;
-    heal(maxHealth - health);
+    health = maxHealth;
     increaseDefense(1); 
     increaseStrength(1);
 }

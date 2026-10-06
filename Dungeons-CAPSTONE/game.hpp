@@ -2,6 +2,10 @@
  
 #include "character.hpp"
 #include  "map.hpp"
+#include "room.hpp"
+
+#include <string>
+#include <vector>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
@@ -36,16 +40,16 @@ public:
     Game();
     void run();
 
-    bool isInRange(const sf::Vector2f first, const sf::Vector2f second, float range);
+    bool isInRange(const sf::Vector2f first, const sf::Vector2f second, float range) const;
 
 private:
     
-    bool canMove(const sf::FloatRect& bounds, Room* room);
-    bool checkDoor(const sf::FloatRect& playerBounds, Room* room);
+    bool canMove(const sf::FloatRect& bounds, Room* room) const;
+    bool checkDoor(const sf::FloatRect& playerBounds, Room* room) const;
 
-    Room* getNextRoom(const sf::FloatRect& playerBounds, Room* room);
+    Room* getNextRoom(const sf::FloatRect& playerBounds, Room* room) const;
 
-	std::string getDoorDirection(const sf::FloatRect& playerBounds, Room* room);
+	std::string getDoorDirection(const sf::FloatRect& playerBounds, Room* room) const;
     void changeRoom(Room* nextRoom, const std::string& direction);
 
 

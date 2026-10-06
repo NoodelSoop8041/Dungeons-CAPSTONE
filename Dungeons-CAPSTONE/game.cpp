@@ -4,6 +4,9 @@
 #include <iostream>
 #include <cmath>
 #include <optional>
+#include <filesystem>
+#include <stdexcept>
+
 
 namespace {
     int calculateDamage(int attackerStrength, int defenderDefense) {
@@ -17,16 +20,19 @@ namespace {
 
 
 Game::Game() {
+
+    if (!font.openFromFile("assets/font.ttf")) {
+		throw std::runtime_error("Failed to load assets/font.ttf (working directory: " +
+			std::filesystem::current_path().string() + ")");
+    }
+
     player.setCurrentRoom(map.getStartingRoom());
 
     window.create(
 		sf::VideoMode({ roomWidth, roomHeight + hudHeight }),
 		"Dungeon Crawler"
 	);
-    if (!font.openFromFile("assets/font.ttf")) {
-		std::cerr << "Failed to load assets/font.ttf" << std::endl;
-		// Handle error appropriately (e.g., throw an exception, exit the program, etc.)
-    }
+
     window.setFramerateLimit(60);
 
 	playerSprite.setSize({ 40.f, 40.f });
@@ -71,7 +77,7 @@ void Game::reset() {
 }
 
 //Combat helpers
-bool Game::isInRange(const sf::Vector2f first, const sf::Vector2f second, float range) {
+bool Game::isInRange(const sf::Vector2f first, const sf::Vector2f second, float range) const {
     sf::Vector2f difference = second - first;
 
     float distance = std::sqrt(
@@ -307,9 +313,8 @@ void Game::render() {
 
 
 
-bool Game::canMove(const sf::FloatRect& bounds, Room* room) {
+bool Game::canMove(const sf::FloatRect& bounds, Room* room) const {
         const auto& layout = room->getLayout();
-        const float tileSize = 64.f;
 
         //Find tiles occupied by player/enemy
         int leftTile = 
@@ -343,9 +348,8 @@ bool Game::canMove(const sf::FloatRect& bounds, Room* room) {
         return true;
 }
 
-bool Game::checkDoor(const sf::FloatRect& playerBounds, Room* room) {
+bool Game::checkDoor(const sf::FloatRect& playerBounds, Room* room) const {
     const auto& layout = room->getLayout();
-    const float tileSize = 64.f;
 
 	int leftTile =
 		static_cast<int>(playerBounds.position.x / tileSize);
@@ -377,7 +381,7 @@ bool Game::checkDoor(const sf::FloatRect& playerBounds, Room* room) {
     return false;
 }
 
-Room* Game::getNextRoom(const sf::FloatRect& playerBounds, Room* room) {
+Room* Game::getNextRoom(const sf::FloatRect& playerBounds, Room* room) const {
 
     std::string direction = getDoorDirection(playerBounds, room);
 
@@ -398,8 +402,6 @@ void Game::changeRoom(Room* newRoom, const std::string& direction) {
 
         player.setCurrentRoom(newRoom);
 
-        const float tileSize = 64.f;
-
         if (direction == "north") {
 			playerSprite.setPosition({ 4 * tileSize + 12.f, 6 * tileSize });
         }
@@ -415,10 +417,9 @@ void Game::changeRoom(Room* newRoom, const std::string& direction) {
     }
 }
 
-std::string Game::getDoorDirection(const sf::FloatRect& playerBounds, Room* room) {
+std::string Game::getDoorDirection(const sf::FloatRect& playerBounds, Room* room) const {
     
     const auto& layout = room->getLayout();
-    const float tileSize = 64.f;
 
     int leftTile = static_cast<int>(playerBounds.position.x / tileSize);
     int rightTile = static_cast<int>((playerBounds.position.x + playerBounds.size.x) / tileSize);
