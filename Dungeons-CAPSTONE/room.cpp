@@ -1,4 +1,5 @@
 #include "room.hpp"
+#include "enemies.hpp"
 #include <string>
 #include <vector>
 #include <iostream>
@@ -54,7 +55,17 @@ const std::vector<Enemy>& Room::getEnemies() const {
 	return enemies;
 }
 
-std::vector<Enemy>& Room::getEnemies()
-{
+std::vector<Enemy>& Room::getEnemies() {
+
 	return enemies;
+}
+
+bool Room::isCleared() const {
+	
+	for (const Enemy& enemy : enemies) {
+		if (enemy.isAlive()) {
+			return false;
+		}
+	}
+	return true;
 }

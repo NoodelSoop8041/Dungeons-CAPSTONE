@@ -22,6 +22,19 @@ void Map::createMap() {
     Room* storage = &rooms[3];
     Room* bossRoom = &rooms[4];
 
+    auto addGoblin = [](Room* room, float x, float y) {
+        Enemy g("Goblin", 4, 2, 2, 5);
+        g.setPosition(sf::Vector2f(x, y));
+        room->addEnemy(g);
+    };
+
+
+    addGoblin(library, 200.f, 300.f);
+    addGoblin(library, 350.f, 350.f);
+
+    addGoblin(storage, 300.f, 300.f);
+    addGoblin(storage, 250.f, 150.f);
+
     //Protype enemy addition
     Enemy goblin("Goblin", 4, 2, 0, 5);
     goblin.setPosition(sf::Vector2f(300.f, 200.f));

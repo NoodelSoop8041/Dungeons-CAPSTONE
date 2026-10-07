@@ -46,4 +46,6 @@ public:
 	void addEnemy(const Enemy& enemy);
 	const std::vector<Enemy>& getEnemies() const;
 	std::vector<Enemy>& getEnemies();
+
+	bool isCleared() const;
 };
