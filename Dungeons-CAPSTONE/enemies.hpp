@@ -7,15 +7,6 @@
 class Character; // Forward declaration
 
 
-
-
-/*
-Enemy			HP	Str	Def	XP	Where
-Goblin (tier 1)	4	2	0	5	Armory, 
-Goblin (tier 2)	6	3	1	5	Library and Storage
-Boss			30	6	2	n/a	Boss Room
-*/
-
 class Enemy {
 
 public:

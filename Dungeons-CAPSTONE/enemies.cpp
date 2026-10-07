@@ -9,7 +9,8 @@ Enemy::Enemy() :
 	xpReward(5),
 	position(0.f, 0.f),
 	attackCooldown(1.0f),
-	attackTimer(0.0f) {}
+	attackTimer(0.0f),
+	boss(false) {}
 
 Enemy::Enemy(const std::string& name, int health, int strength, int defense, int xpReward, bool boss) :
 	name(name),
