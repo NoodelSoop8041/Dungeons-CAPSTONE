@@ -195,6 +195,9 @@ void Game::update(float deltaTime) {
 
                 if (!enemy.isAlive()) {
                     player.increaseExperience(enemy.getXpReward());
+					if (enemy.isBoss()) {
+						state = GameState::Won;
+					}
                     continue;
                 }
 
@@ -236,7 +239,7 @@ void Game::update(float deltaTime) {
         }
     }
 
-    if (player.getHealth() <= 0) {
+    if (state == GameState::Playing && player.getHealth() <= 0) {
 		state = GameState::Lost;
     }
 }
@@ -312,6 +315,7 @@ void Game::render() {
     drawHud();
 
     if (state == GameState::Lost) { drawOverlay("YOU DIED : press Esc to Restart"); }
+	if (state == GameState::Won) { drawOverlay("YOU WIN! : press Esc to Restart"); }
 
     window.display();
 }
