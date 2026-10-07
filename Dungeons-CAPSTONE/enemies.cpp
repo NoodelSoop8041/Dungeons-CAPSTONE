@@ -11,14 +11,15 @@ Enemy::Enemy() :
 	attackCooldown(1.0f),
 	attackTimer(0.0f) {}
 
-Enemy::Enemy(const std::string name, int health, int strength, int defense, int xpReward) :
+Enemy::Enemy(const std::string& name, int health, int strength, int defense, int xpReward, bool boss) :
 	name(name),
 	health(health), maxHealth(health),
 	strength(strength), defense(defense),
 	xpReward(xpReward),
 	position(0.f, 0.f),
 	attackCooldown(1.0f),
-	attackTimer(0.0f) {}
+	attackTimer(0.0f),
+	boss(boss) {}
 
 std::string Enemy::getName() const {
 	return name;
@@ -134,4 +135,8 @@ void Enemy::updateAttackCooldown(float deltaTime) {
 
 void Enemy::resetAttackCooldown() {
 	attackTimer = attackCooldown;
+}
+
+bool Enemy::isBoss() const {
+	return boss;
 }

@@ -22,7 +22,8 @@ public:
 
 	Enemy();
 
-	Enemy(const std::string name, int health, int strength, int defense, int xpReward);
+	Enemy(const std::string& name, int health, int strength, int defense,
+		int xpReward, bool boss = false);
 
 	std::string getName() const;
 	void setName(const std::string& name);
@@ -58,6 +59,9 @@ public:
 	void resetAttackCooldown();
 
 
+
+	bool isBoss() const;
+
 private:
 
 	std::string name;
@@ -73,4 +77,6 @@ private:
 
 	float attackCooldown;
 	float attackTimer;
+
+	bool boss;
 };
