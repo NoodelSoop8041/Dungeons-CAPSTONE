@@ -31,6 +31,9 @@ void Map::createMap() {
     goblin2.setPosition(sf::Vector2f(450.f, 250.f));
     armory->addEnemy(goblin2);
 
+	Enemy boss("Boss", 30, 6, 2, 0, true);
+	boss.setPosition(sf::Vector2f(400.f, 300.f));
+	bossRoom->addEnemy(boss);
 
     entrance->setNorth(armory);
     entrance->setWest(library);

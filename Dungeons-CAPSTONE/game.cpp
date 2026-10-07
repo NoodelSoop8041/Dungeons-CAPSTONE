@@ -224,7 +224,12 @@ void Game::update(float deltaTime) {
         if (enemy.isAlive())
         {
             sf::CircleShape sprite(15.f);
-            sprite.setFillColor(sf::Color::Red);
+			if (enemy.isBoss()) {
+				sprite.setFillColor(sf::Color::Magenta);
+			}
+            else {
+                sprite.setFillColor(sf::Color::Red);
+            }
             sprite.setPosition(enemy.getPosition());
 
             enemySprites.push_back(sprite);
