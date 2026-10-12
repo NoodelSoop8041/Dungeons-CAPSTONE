@@ -104,6 +104,7 @@ void Game::update(float deltaTime) {
 
     Room* currentRoom = player.getCurrentRoom();
 
+    const sf::Vector2f previousPosition = playerSprite.getPosition();
 
     sf::FloatRect newBounds = playerSprite.getGlobalBounds();
     newBounds.position += movement;
@@ -115,7 +116,7 @@ void Game::update(float deltaTime) {
 
     sf::FloatRect playerBounds = playerSprite.getGlobalBounds();
 
-
+    //This is a known limitation with door lock logic, will need to be redone later on
     if (checkDoor(playerBounds, currentRoom)) {
 
         std::string direction = getDoorDirection(playerBounds, currentRoom);
@@ -123,14 +124,15 @@ void Game::update(float deltaTime) {
 
         if (nextRoom != nullptr) {
             if (nextRoom == map.getBossRoom() && !map.isBossUnlocked()) {
-
+                playerSprite.setPosition(previousPosition);
             }
             else {
                 changeRoom(nextRoom, direction);
             }
         }
-    }
 
+    }
+        
     //Enemies
 
     Room* room = player.getCurrentRoom();
