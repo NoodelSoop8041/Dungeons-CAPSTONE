@@ -1,12 +1,10 @@
 #include "map.hpp"
-#include <iostream>
 
 
-
-Map::Map() : startingRoom(nullptr) {
+Map::Map() : startingRoom(nullptr), bossRoom(nullptr) {
 
 	createMap();
-};
+}
 
 void Map::createMap() {
 	
@@ -20,7 +18,7 @@ void Map::createMap() {
     Room* armory = &rooms[1];
     Room* library = &rooms[2];
     Room* storage = &rooms[3];
-    Room* bossRoom = &rooms[4];
+    Room* bossArena = &rooms[4];
 
     auto addGoblin = [](Room* room, float x, float y) {
         Enemy g("Goblin", 4, 2, 2, 5);
@@ -46,21 +44,40 @@ void Map::createMap() {
 
 	Enemy boss("Boss", 30, 6, 2, 0, true);
 	boss.setPosition(sf::Vector2f(400.f, 300.f));
-	bossRoom->addEnemy(boss);
+	bossArena->addEnemy(boss);
 
     entrance->setNorth(armory);
     entrance->setWest(library);
     entrance->setEast(storage);
-    entrance->setSouth(bossRoom);
+    entrance->setSouth(bossArena);
 
     armory->setSouth(entrance);
     library->setEast(entrance);
     storage->setWest(entrance);
-    bossRoom->setNorth(entrance);
+    bossArena->setNorth(entrance);
 
     startingRoom = entrance;
+    bossRoom = bossArena;
 }
 
 Room* Map::getStartingRoom() {
     return startingRoom;
+}
+
+Room* Map::getBossRoom() const {
+    return bossRoom;
+}
+
+bool Map::isBossUnlocked() const {
+    for (const Room& room : rooms) {
+        if (&room == bossRoom) {
+            continue;
+        }
+
+        if (!room.isCleared()) {
+            return false;
+        }
+    }
+    
+    return true;
 }

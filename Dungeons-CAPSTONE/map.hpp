@@ -8,6 +8,7 @@ class Map {
 private:
 	std::vector<Room> rooms;
 	Room* startingRoom;
+	Room* bossRoom;
 
 public:
 
@@ -16,5 +17,9 @@ public:
 	void createMap();
 
 	Room* getStartingRoom(); 
+
+	Room* getBossRoom() const;
+
+	bool isBossUnlocked() const;
 
 };
