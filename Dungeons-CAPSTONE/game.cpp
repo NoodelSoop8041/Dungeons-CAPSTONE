@@ -122,8 +122,12 @@ void Game::update(float deltaTime) {
         Room* nextRoom = getNextRoom(playerBounds, currentRoom);
 
         if (nextRoom != nullptr) {
+            if (nextRoom == map.getBossRoom() && !map.isBossUnlocked()) {
 
-            changeRoom(nextRoom, direction);
+            }
+            else {
+                changeRoom(nextRoom, direction);
+            }
         }
     }
 
