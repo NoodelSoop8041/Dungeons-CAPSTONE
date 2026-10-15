@@ -48,4 +48,6 @@ public:
 	std::vector<Enemy>& getEnemies();
 
 	bool isCleared() const;
+
+	void sealUnlinkedDoors();
 };

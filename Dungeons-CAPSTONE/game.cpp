@@ -286,6 +286,9 @@ void Game::render() {
 
     Room* room = player.getCurrentRoom();
 
+    const Room* bossRoom = map.getBossRoom();
+    const bool bossLocked = !map.isBossUnlocked();
+
     const auto& layout = room->getLayout();
 
     for (std::size_t y = 0; y < layout.size(); y++) {
@@ -305,6 +308,18 @@ void Game::render() {
             }
             else if (layout[y][x] == TileType::Door) {
                 tile.setFillColor(sf::Color(150, 100, 50));
+
+                const Room* leadsTo = nullptr;
+
+                if (y == 0)                         { leadsTo = room->getNorth(); }
+                else if (y == layout.size() - 1)    { leadsTo = room->getSouth(); }
+                else if (x == 0)                    { leadsTo = room->getWest(); }
+                else if (x == layout[y].size() - 1) { leadsTo = room->getEast(); }
+
+                if (leadsTo != nullptr && leadsTo == bossRoom && bossLocked) {
+                    tile.setFillColor(sf::Color(140, 40, 40));
+                }
+
             }
             window.draw(tile);
         }
@@ -462,5 +477,3 @@ std::string Game::getDoorDirection(const sf::FloatRect& playerBounds, Room* room
 
     return "";
 }
-
-

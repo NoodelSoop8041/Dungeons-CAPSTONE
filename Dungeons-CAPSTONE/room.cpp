@@ -17,19 +17,35 @@ Room::Room(const std::string& name, const std::string& description)
 			}
 		}
 	}
-
-	//Create a door in the middle of walls
-	layout[0][4] = TileType::Door; // North wall
-	layout[7][4] = TileType::Door; // South wall
-	layout[3][0] = TileType::Door; // West wall
-	layout[3][9] = TileType::Door; // East wall
-
 }
 
-void Room::setNorth(Room* room) { north = room; }
-void Room::setSouth(Room* room) { south = room; }
-void Room::setEast(Room* room) { east = room; }
-void Room::setWest(Room* room) { west = room; }
+void Room::setNorth(Room* room) { 
+	north = room; 
+	if (room != nullptr) {
+		layout[0][4] = TileType::Door;
+	}
+}
+
+void Room::setSouth(Room* room) { 
+	south = room; 
+	if (room != nullptr) {
+		layout[7][4] = TileType::Door;
+	}
+}
+
+void Room::setEast(Room* room) { 
+	east = room;
+	if (room != nullptr) {
+		layout[3][9] = TileType::Door;
+	}
+}
+
+void Room::setWest(Room* room) { 
+	west = room; 
+	if (room != nullptr) {
+		layout[3][0] = TileType::Door;
+	}
+}
 
 Room* Room::getNorth() const { return north; }
 Room* Room::getSouth() const { return south; }
@@ -68,4 +84,8 @@ bool Room::isCleared() const {
 		}
 	}
 	return true;
+}
+
+void Room::sealUnlinkedDoors() {
+	
 }
