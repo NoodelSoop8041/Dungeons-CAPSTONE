@@ -54,4 +54,10 @@
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="OFL.md">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="..\..\..\..\Downloads\README.md" />
+  </ItemGroup>
 </Project>
